@@ -35,67 +35,53 @@ class SallaHttpRequestService
             }
         }
     }
+    private function sendRequest($method, $url, $data = [])
+    {
+        $headers = [
+            'Authorization' => 'Bearer ' . $this->accessToken,
+            'Accept' => 'application/json'
+        ];
+
+        $response = Http::withHeaders($headers)->asForm()->{$method}($url, $data);
+        $json_response = json_decode($response->body());
+        $status_code = $response->status();
+
+        if ($status_code == 200) {
+            return $json_response->data;
+        } else {
+            throw new \Exception('Invalid response Code ' . $status_code . ' || ' . $response->body().' for Api '.$url);
+        }
+    }
 
     public function getStoreInfoDetails()
     {
-        $headers = [
-            'Authorization' => 'Bearer '.$this->accessToken,
-            'Accept' => 'application/json'
-        ];
-        $url = config('services.salla.salla_url').'/admin/v2/store/info';
-        $response = Http::withHeaders($headers)->asForm()->get($url);
-        $json_response= json_decode($response->body());
-        return $json_response->data;
+        $url = config('services.salla.salla_url') . '/admin/v2/store/info';
+        return $this->sendRequest('get', $url);
     }
 
     public function getProducts()
     {
-        $headers = [
-            'Authorization' => 'Bearer '.$this->accessToken,
-            'Accept' => 'application/json'
-        ];
-        $url = config('services.salla.salla_url').'/admin/v2/products';
-        $response = Http::withHeaders($headers)->asForm()->get($url);
-        $json_response= json_decode($response->body());
-        return $json_response->data;
+        $url = config('services.salla.salla_url') . '/admin/v2/products';
+        return $this->sendRequest('get', $url);
     }
+
     public function getProductDetails(Request $request)
     {
-        $headers = [
-            'Authorization' => 'Bearer '.$this->accessToken,
-            'Accept' => 'application/json'
-        ];
-        $url = config('services.salla.salla_url').'/admin/v2/products/'.$request->id;
-        $response = Http::withHeaders($headers)->asForm()->get($url);
-        $json_response= json_decode($response->body());
-        return $json_response->data;
+        $url = config('services.salla.salla_url') . '/admin/v2/products/' . $request->id;
+        return $this->sendRequest('get', $url);
     }
+
     public function createCustomerRequest(CreateCustomerRequest $request)
     {
-        $headers = [
-            'Authorization' => 'Bearer '.$this->accessToken,
-            'Accept' => 'application/json'
-        ];
-        $url = config('services.salla.salla_url').'/admin/v2/customers';
-        $response = Http::withHeaders($headers)->asForm()->post($url, $request->toArray());
-
-        $json_response= json_decode($response->body());
-        return $json_response->data;
+        $url = config('services.salla.salla_url') . '/admin/v2/customers';
+        return $this->sendRequest('post', $url, $request->toArray());
     }
 
     public function createOrderRequest(array $orderData)
     {
-        $headers = [
-            'Authorization' => 'Bearer '.$this->accessToken,
-            'Accept' => 'application/json'
-        ];
-        $url = config('services.salla.salla_url').'/admin/v2/orders';
-        $response = Http::withHeaders($headers)->asForm()->post($url, $orderData);
-
-        $json_response= json_decode($response->body());
-        return $json_response->data;
+        $url = config('services.salla.salla_url') . '/admin/v2/orders';
+        return $this->sendRequest('post', $url, $orderData);
     }
-
 
     private function checkTokenExpireDate(): bool
     {
