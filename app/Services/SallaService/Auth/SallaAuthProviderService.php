@@ -20,6 +20,7 @@ class SallaAuthProviderService extends SallaAuthHttpRequestService implements Ec
     {
         return $this->sendTokenRequest($request);
     }
+    //get new access token from refresh token in case the access token expired
     public function handleRefreshTokenRequest(Setting $setting)
     {
         $refresh_token=$setting->extra['refresh_token'];

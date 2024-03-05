@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class EcommerceApiController extends Controller
 {
-
+    //get the login url for give the app permission and get the access token
     public function sendAuthRequest(Request $request)
     {
         try {
@@ -22,6 +22,7 @@ class EcommerceApiController extends Controller
             return ResponseHelper::errorResponse($exception->getMessage());
         }
     }
+    //handle the callback request from ecommerce (Salla) which contains access token.
     public function callback(Request $request)
     {
         try {

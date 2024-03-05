@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class StoreApiController extends Controller
 {
+    //get store details
     public function getStoreDetails()
     {
         try {

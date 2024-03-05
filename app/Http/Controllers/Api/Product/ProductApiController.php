@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class ProductApiController extends Controller
 {
+    // get products list
     public function index()
     {
         try {
@@ -22,7 +23,7 @@ class ProductApiController extends Controller
             return ResponseHelper::errorResponse($exception->getMessage());
         }
     }
-
+    //get product details
     public function show(Request $request)
     {
         try {
